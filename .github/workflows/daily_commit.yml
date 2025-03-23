@@ -1,4 +1,4 @@
-name: Bishwa's Daily Commit
+name: Hilman Firdd Daily Commit
 
 on:
   schedule:
@@ -27,7 +27,7 @@ jobs:
           FILE="commit_number.md"
 
           if [ ! -f "$FILE" ]; then
-            echo "Hello, my name is Bishwa Shah" > "$FILE"
+            echo "Hello, my name is Hilman Firdd" > "$FILE"
             echo "commit number: 1" >> "$FILE"
           else
             CURRENT_COUNT=$(grep -oP 'commit number: \K\d+' "$FILE" || echo "0")
