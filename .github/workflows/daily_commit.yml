@@ -42,6 +42,6 @@ jobs:
           set -e  # Berhenti jika ada error
           git add commit_number.md
           git commit -m "Automated commit #$(grep -oP 'commit number: \K\d+' commit_number.md)"
-          git push origin main
+          git push origin master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
