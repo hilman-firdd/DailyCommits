@@ -2,36 +2,46 @@ name: Bishwa's Daily Commit
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Every day at midnight UTC to runs every 7-8 min set cron to '*/1 * * * *'
+    - cron: "*/1 * * * *" # Runs every minute (for testing)
+  workflow_dispatch: # Memungkinkan menjalankan workflow secara manual
 
 jobs:
   commit:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0 # Ambil semua commit untuk menghindari masalah push
 
-      - name: Create file and commit
+      - name: Set Up Git
         run: |
+          git config --global user.name "hilman-firdd"
+          git config --global user.email "hilmanfirdaus@gmail.com"
+
+      - name: Create or Update Commit File
+        run: |
+          set -e  # Berhenti jika ada error
           FILE="commit_number.md"
+
           if [ ! -f "$FILE" ]; then
-            echo "Hello, my name is bishwa shah" > "$FILE"
+            echo "Hello, my name is Bishwa Shah" > "$FILE"
             echo "commit number: 1" >> "$FILE"
           else
-            CURRENT_COUNT=$(grep -oP 'commit number: \K\d+' "$FILE")
-            if [ -z "$CURRENT_COUNT" ]; then
-              CURRENT_COUNT=0
-            fi
+            CURRENT_COUNT=$(grep -oP 'commit number: \K\d+' "$FILE" || echo "0")
             NEXT_COUNT=$((CURRENT_COUNT + 1))
-            sed -i "/commit number: /c\commit number: $NEXT_COUNT" "$FILE"
+            sed -i'' -e "/commit number: /c\commit number: $NEXT_COUNT" "$FILE"
           fi
-          git config --global user.name "beesou777"
-          git config --global user.email "sbeesou@gmail.com"
-          git add "$FILE"
-          git commit -m "Hello, my name is bishwa shah nice to meet you"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/beesou777/mean-commit.git
+
+          cat "$FILE"  # Debugging: Tampilkan isi file
+
+      - name: Commit and Push Changes
+        run: |
+          set -e  # Berhenti jika ada error
+          git add commit_number.md
+          git commit -m "Automated commit #$(grep -oP 'commit number: \K\d+' commit_number.md)"
+          git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
