@@ -2,7 +2,7 @@ name: Hilman Firdd Daily Commit
 
 on:
   schedule:
-    - cron: "*/1 * * * *" # Runs every minute (for testing)
+    - cron: "0 */5 * * *" # Setiap 5 jam
   workflow_dispatch: # Memungkinkan menjalankan workflow secara manual
 
 jobs:
